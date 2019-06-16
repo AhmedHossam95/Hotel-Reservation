@@ -5,6 +5,18 @@
 
     ViewBag.Title = "Create";
 }
+<style>
+    .btnCentered {
+        margin-left: 350px;
+       
+    }
+
+
+
+</style>
+
+
+
 
 <h2>Create</h2>
 
@@ -12,116 +24,150 @@
 {
     if (ViewBag.EditMode == false)
     {
-        @Html.DropDownListFor(Model => Model.Room.RoomTypeId, ViewBag.RoomTypeId as SelectList, "Select Room Type", new { @class = "form-control", @id = "RoomTypeId" })
+     <div class="row">
+         <div class="col-lg-5">
+             @Html.DropDownListFor(Model => Model.Room.RoomTypeId, ViewBag.RoomTypeId as SelectList, "Select Room Type", new { @class = "form-control", @id = "RoomTypeId" })
+             
 
-        @Html.DropDownListFor(Model => Model.RoomId, new SelectList(""), "Select Room Number", new { @class = "form-control" })
+         </div>
+         <div class="col-lg-5">
+             @Html.DropDownListFor(Model => Model.RoomId, new SelectList(""), "Select Room Number", new { @class = "form-control" })
+             
+
+         </div>
+
+     </div>
     }
 
     if (ViewBag.EditMode == true)
     {
-        @Html.DropDownListFor(Model => Model.Room.RoomTypeId, ViewBag.RoomTypeId as SelectList, "Select Room Type", new { @class = "form-control", @disabled = "disabled", @id = "RoomTypeId" })
+     <div class="row">
+         
+         <div class="col-lg-5">
 
-        @Html.DropDownListFor(Model => Model.RoomId,ViewBag.RoomId as SelectList, "Select Room Number", new { @class = "form-control" })
+             @Html.TextBoxFor(Model => Model.Room.RoomType.Type, new { @class = "form-control", @disabled = "disabled" })
 
-        @Html.HiddenFor(Model => Model.Room.RoomType.Price, new { @class = "form-control", @id = "pricePerDay" })
-        @Html.TextBoxFor(Model => Model.Price, new { @class = "form-control", @id = "Price", @disabled = "disabled" })
-    }
-    <div class="row form-group">
-        <div class="col-lg-5">
-            @Html.TextBoxFor(Model => Model.StartDate, new { @id = "TextBox1", @class = "form-control", placeholder = "Select Start Date", autocomplete = "off" })
+         </div>
+        
+         <div class="col-lg-5">
+
+             @Html.TextBoxFor(Model => Model.Room.Number, new { @class = "form-control", @disabled = "disabled" })
+
+         </div>
+     </div>
+                 @Html.HiddenFor(Model => Model.Room.RoomType.Price, new { @class = "form-control", @id = "pricePerDay" })
+
+        <div>
+            <label>Price</label>
+            @Html.TextBoxFor(Model => Model.Price, new { @class = "form-control", @id = "Price", @disabled = "disabled" })
 
         </div>
+    }
+    <br/>
+    <div class="row form-group">
+       
         <div class="col-lg-5">
-            @Html.TextBoxFor(Model => Model.EndDate, new { @id = "TextBox2", @class = "form-control", placeholder = "Select End Date", autocomplete = "off" })
 
+            @Html.TextBoxFor(Model => Model.StartDate, new { @id = "TextBox1", @class = "form-control", placeholder = "Select Start Date", autocomplete = "off" })
+            
+
+        </div>
+     
+        <div class="col-lg-5">
+
+            @Html.TextBoxFor(Model => Model.EndDate, new { @id = "TextBox2", @class = "form-control", placeholder = "Select End Date", autocomplete = "off" })
+           
         </div>
         <div class=" col-lg-2">
-            @Html.TextBoxFor(Model => Model.Duration, new { @id = "TextBox3" }) days
+            @Html.TextBoxFor(Model => Model.Duration, new { @id = "TextBox3"}) days
 
 
         </div>
 
     </div>
-    if (ViewBag.EditMode == true)
-    {
-        <input type="submit" name="name" value="Edit" class="btn btn-danger" />
+         if (ViewBag.EditMode == true)
+         {
+         <input type="submit" name="name" value="Edit" class="btn btn-danger btnCentered" />
+         <br/> 
+         <a href="/Reservations/Create" class="text-danger">Return To Create Form</a>
 
-    }
-    else
-    {
-        <input type="submit" name="name" value="Reserve" class="btn btn-danger" />
-    }
+         }
+         else
+         {
+         <input type="submit" name="name" value="Reserve" class="btn btn-danger btnCentered" />
+         }
+         <div>
+             <br />
 
-    <div>
-        @{Html.RenderAction("_List", "Reservations");}
-    </div>
-}
+             @{Html.RenderAction("_List", "Reservations");}
+         </div>
+         }
 
-<script src="~/Scripts/jquery-3.3.1.js"></script>
-<script src="~/Scripts/jquery-ui-1.12.1.js"></script>
-<script>
+         <script src="~/Scripts/jquery-3.3.1.js"></script>
+         <script src="~/Scripts/jquery-ui-1.12.1.js"></script>
+         <script>
 
-    $(document).ready(function () {
-
-
-
-
-
-
-        $("#RoomTypeId").change(function () {
-
-            var roomTypeId = $("#RoomTypeId").val();
-            $.ajax({
-
-                url: "/Reservations/GetRoomsList",
-                method: "GET",
-                data: { RoomTypeId: roomTypeId },
-                success: function (data) {
-                    $("#RoomId").empty();
-                    $("#RoomId").append("<option>Select Room Number</option>");
-                    $.each(data, function (index, row) {
-                        $("#RoomId").append("<option value='" + row.Id + "'>" + row.Number + "</option>");
-
-                    });
-                }
+             $(document).ready(function () {
 
 
 
-            });
-
-         
-
-        });
-
-
-        $("#TextBox1").datepicker({
-            minDate: 0,
-
-            onSelect: function (dateStr) {
-                var min = $(this).datepicker('getDate');
-                $("#TextBox2").datepicker('option', 'minDate', min || '0');
-            }
-        });
-
-        $("#TextBox2").datepicker({
-            minDate: '0',
-
-            onSelect: function (dateStr) {
-                var max = $(this).datepicker('getDate');
-                $('#datepicker').datepicker('option', 'maxDate', max || '+1Y+6M');
-                var start = $("#TextBox1").datepicker("getDate");
-                var end = $("#TextBox2").datepicker("getDate");
-                var days = ((end - start) / (1000 * 60 * 60 * 24))+1;
-
-                var price = $("#pricePerDay").val() // Adding Price
-                $("#Price").val(days * price)  ;
-                $("#TextBox3").val(days);
-            }
-        });
 
 
 
-    
+                 $("#RoomTypeId").change(function () {
 
-    });
-</script>
+                     var roomTypeId = $("#RoomTypeId").val();
+                     $.ajax({
+
+                         url: "/Reservations/GetRoomsList",
+                         method: "GET",
+                         data: { RoomTypeId: roomTypeId },
+                         success: function (data) {
+                             $("#RoomId").empty();
+                             $("#RoomId").append("<option>Select Room Number</option>");
+                             $.each(data, function (index, row) {
+                                 $("#RoomId").append("<option value='" + row.Id + "'>" + row.Number + "</option>");
+
+                             });
+                         }
+
+
+
+                     });
+
+
+
+                 });
+
+
+                 $("#TextBox1").datepicker({
+                     minDate: 0,
+
+                     onSelect: function (dateStr) {
+                         var min = $(this).datepicker('getDate');
+                         $("#TextBox2").datepicker('option', 'minDate', min || '0');
+                     }
+                 });
+
+                 $("#TextBox2").datepicker({
+                     minDate: '0',
+
+                     onSelect: function (dateStr) {
+                         var max = $(this).datepicker('getDate');
+                         $('#datepicker').datepicker('option', 'maxDate', max || '+1Y+6M');
+                         var start = $("#TextBox1").datepicker("getDate");
+                         var end = $("#TextBox2").datepicker("getDate");
+                         var days = ((end - start) / (1000 * 60 * 60 * 24)) + 1;
+
+                         var price = $("#pricePerDay").val() 
+                         $("#Price").val(days * price);
+                         $("#TextBox3").val(days);
+                     }
+                 });
+
+
+
+
+
+             });
+         </script>

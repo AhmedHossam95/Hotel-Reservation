@@ -24,15 +24,17 @@ namespace TIT_Task.Controllers
         {
 
             ViewBag.RoomTypeId = new SelectList(_context.RoomTypes.ToList(), "Id", "Type");
-            var res = new Reservation();
             ViewBag.EditMode = false;
+            var res = new Reservation();
 
             if (id != 0)
             {
                 ViewBag.EditMode = true;
-                ViewBag.RoomId = new SelectList(_context.Rooms.ToList(), "Id", "Number");
+
                 res = _context.Reservations.Find(id);
-                 ViewBag.Price = _context.RoomTypes.Find(res.Room.RoomTypeId).Price;
+                ViewBag.RoomNumber = res.Room.Number;
+                ViewBag.RoomType = res.Room.RoomType.Type;
+                ViewBag.Price = _context.RoomTypes.Find(res.Room.RoomTypeId).Price;
 
             }
             
@@ -43,27 +45,37 @@ namespace TIT_Task.Controllers
         [HttpPost]
         public ActionResult Create([Bind(Include = "Id,RoomId,StartDate,EndDate,Duration,Price")]Reservation newReservation)
         {
+            ViewBag.RoomTypeId = new SelectList(_context.RoomTypes.ToList(), "Id", "Type");
+
             if (newReservation.Id == 0)
             {
-                ViewBag.RoomTypeId = new SelectList(_context.RoomTypes.ToList(), "Id", "Type");
 
-
-
-                var Room = _context.Rooms.Find(newReservation.RoomId);
-                var RoomType = _context.RoomTypes.Find(Room.RoomTypeId);
-                newReservation.Price = newReservation.Duration * RoomType.Price;
-
+                
+                    var Room = _context.Rooms.Find(newReservation.RoomId);
+                    var RoomType = _context.RoomTypes.Find(Room.RoomTypeId);
+                    newReservation.Price = newReservation.Duration * RoomType.Price;
+              
                 _context.Reservations.Add(newReservation);
+                
+
             }
             else
             {
-                var resInDb = _context.Reservations.Find(newReservation.Id);
-                _context.Entry(resInDb).State = System.Data.Entity.EntityState.Modified;
+                
+                    var resInDb = _context.Reservations.Find(newReservation.Id);
+                    var Room = _context.Rooms.Find(resInDb.RoomId);
+                    var RoomType = _context.RoomTypes.Find(Room.RoomTypeId);
+                    resInDb.Price = newReservation.Duration * RoomType.Price;
+                    resInDb.StartDate = newReservation.StartDate;
+                    resInDb.EndDate = newReservation.EndDate;
+                    resInDb.Duration = newReservation.Duration;
+                
+              
 
             }
             _context.SaveChanges();
-
             ViewBag.EditMode = false;
+
 
             return View();
            

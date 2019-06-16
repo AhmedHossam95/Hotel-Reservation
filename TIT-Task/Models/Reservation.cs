@@ -11,14 +11,25 @@ namespace TIT_Task.Models
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+
     public partial class Reservation
     {
         public int Id { get; set; }
+
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:dd.MM.yyyy}", ApplyFormatInEditMode = true)]
         public Nullable<System.DateTime> StartDate { get; set; }
+
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:dd.MM.yyyy}", ApplyFormatInEditMode = true)]
         public Nullable<System.DateTime> EndDate { get; set; }
+
+
         public Nullable<int> Duration { get; set; }
         public Nullable<int> Price { get; set; }
+        
+        
         public Nullable<int> RoomId { get; set; }
     
         public virtual Room Room { get; set; }

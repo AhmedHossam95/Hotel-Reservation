@@ -1,0 +1,94 @@
+﻿@model IEnumerable<TIT_Task.Models.Reservation>
+<link href="~/Content/bootstrap.css" rel="stylesheet" />
+
+<table class="table table-bordered table-striped">
+
+
+    <thead>
+        <tr>
+            <th>
+                #
+            </th>
+            <th>
+                Room Type
+            </th>
+            <th>
+                Room Number
+            </th>
+            <th>
+                From
+            </th>
+            <th>
+                To
+            </th>
+            <th>
+                No.days
+            </th>
+            <th>
+                Price
+            </th>
+            <th>
+            #
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+        <tr id="@item.Id">
+            <td>
+                <a class="btn-link" id="js-delete" type="button"   onclick="deleteRow('@item.Id')">x</a>
+               
+            </td>
+
+            <td>
+                @item.Room.RoomType.Type
+            </td>
+            <td>
+                @item.Room.Number
+            </td>
+            <td>
+                @item.StartDate
+            </td>
+            <td>
+                @item.EndDate
+            </td>
+            <td>
+                @item.Duration
+            </td>
+            <td>
+                @item.Price
+            </td>
+            <td>
+                <a class="btn-link" href="@Url.Action("Create","Reservations" , new {  id= item.Id})">Edit</a>
+               
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>
+<script src="~/Scripts/jquery-3.3.1.js"></script>
+<script src="~/Scripts/jquery-ui-1.12.1.js"></script>
+<script>
+
+
+
+        function deleteRow(id) {
+            if (confirm("Are you sure you want to delete this")) {
+                $.ajax({
+                    url: "/Reservations/Delete/" + id,
+                    method: "Post",
+                    success: function (data) {
+                        $("#"+id).remove();
+                    }
+
+                });
+            }
+
+
+
+        }
+      
+
+  
+</script>

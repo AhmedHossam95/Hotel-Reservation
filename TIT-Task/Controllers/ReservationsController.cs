@@ -13,19 +13,17 @@ namespace TIT_Task.Controllers
 
         HotelEntities _context = new HotelEntities();
         // GET: Reservations
-        public ActionResult Index()
-        {
-            return View();
-        }
-
+       
 
 
         public ActionResult Create(int id =0)
         {
-
+          
             ViewBag.RoomTypeId = new SelectList(_context.RoomTypes.ToList(), "Id", "Type");
             ViewBag.EditMode = false;
             var res = new Reservation();
+
+          
 
             if (id != 0)
             {
@@ -35,7 +33,7 @@ namespace TIT_Task.Controllers
                 ViewBag.RoomNumber = res.Room.Number;
                 ViewBag.RoomType = res.Room.RoomType.Type;
                 ViewBag.Price = _context.RoomTypes.Find(res.Room.RoomTypeId).Price;
-
+             
             }
             
             return View(res);
@@ -45,23 +43,47 @@ namespace TIT_Task.Controllers
         [HttpPost]
         public ActionResult Create([Bind(Include = "Id,RoomId,StartDate,EndDate,Duration,Price")]Reservation newReservation)
         {
-            ViewBag.RoomTypeId = new SelectList(_context.RoomTypes.ToList(), "Id", "Type");
+
+
+           
+
+            
 
             if (newReservation.Id == 0)
             {
+                if (!ModelState.IsValid)
+                {
+                    ViewBag.RoomTypeId = new SelectList(_context.RoomTypes.ToList(), "Id", "Type");
+                    ViewBag.EditMode = false;
+                    return View();
+                }
 
-                
+                else
+                {
+                    ViewBag.RoomTypeId = new SelectList(_context.RoomTypes.ToList(), "Id", "Type");
+
                     var Room = _context.Rooms.Find(newReservation.RoomId);
                     var RoomType = _context.RoomTypes.Find(Room.RoomTypeId);
                     newReservation.Price = newReservation.Duration * RoomType.Price;
-              
-                _context.Reservations.Add(newReservation);
+                    _context.Reservations.Add(newReservation);
+                }
                 
 
             }
             else
             {
-                
+                if (!ModelState.IsValid)
+                {
+                    ViewBag.RoomTypeId = new SelectList(_context.RoomTypes.ToList(), "Id", "Type");
+                    ViewBag.EditMode = true;
+                    return View();
+
+                }
+
+                else
+                {
+                    ViewBag.RoomTypeId = new SelectList(_context.RoomTypes.ToList(), "Id", "Type");
+
                     var resInDb = _context.Reservations.Find(newReservation.Id);
                     var Room = _context.Rooms.Find(resInDb.RoomId);
                     var RoomType = _context.RoomTypes.Find(Room.RoomTypeId);
@@ -69,8 +91,8 @@ namespace TIT_Task.Controllers
                     resInDb.StartDate = newReservation.StartDate;
                     resInDb.EndDate = newReservation.EndDate;
                     resInDb.Duration = newReservation.Duration;
-                
-              
+
+                }
 
             }
             _context.SaveChanges();
@@ -78,26 +100,10 @@ namespace TIT_Task.Controllers
 
 
             return View();
-           
-         
-            
+
         }
 
       
-
-
-
-
-
-
-  
-
-
-
-
-
-
-
         public ActionResult _List()
         {
             var reservationList = _context.Reservations.ToList();

@@ -11,7 +11,8 @@ namespace TIT_Task.Models
 {
     using System;
     using System.Collections.Generic;
-    
+ 
+
     public partial class RoomType
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
@@ -19,7 +20,8 @@ namespace TIT_Task.Models
         {
             this.Rooms = new HashSet<Room>();
         }
-    
+
+      
         public int Id { get; set; }
         public string Type { get; set; }
         public Nullable<int> Price { get; set; }

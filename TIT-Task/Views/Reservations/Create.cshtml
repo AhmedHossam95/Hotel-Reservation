@@ -7,7 +7,12 @@
 }
 <style>
     .btnCentered {
-        margin-left: 350px;
+        margin-left: 350px
+    }
+    .Error{
+        color:red;
+        font-size:large;
+        font-family:sans-serif
     }
 </style>
 
@@ -20,87 +25,97 @@
 {
     if (ViewBag.EditMode == false)
     {
-<div class="row">
-    <div class="col-lg-5">
-        @Html.DropDownListFor(Model => Model.Room.RoomTypeId, ViewBag.RoomTypeId as SelectList, "Select Room Type", new { @class = "form-control", @id = "RoomTypeId" })
+        <div class="row">
+            <div class="col-lg-5">
+                @Html.DropDownListFor(Model => Model.Room.RoomTypeId, ViewBag.RoomTypeId as SelectList, "Select Room Type", new { @class = "form-control", @id = "RoomTypeId" })
+                @Html.ValidationMessageFor(Model=>Model.Room.RoomTypeId,"",new {@class= "Error" })
 
 
-    </div>
-    <div class="col-lg-5">
-        @Html.DropDownListFor(Model => Model.RoomId, new SelectList(""), "Select Room Number", new { @class = "form-control" })
+            </div>
+            <div class="col-lg-5">
+                @Html.DropDownListFor(Model => Model.RoomId, new SelectList(""), "Select Room Number", new { @class = "form-control" })
+                @Html.ValidationMessageFor(Model => Model.RoomId, "", new { @class = "Error" })
 
 
-    </div>
 
-</div>
+            </div>
+
+        </div>
     }
 
     if (ViewBag.EditMode == true)
     {
-<div class="row">
+        <div class="row">
 
-    <div class="col-lg-5">
+            <div class="col-lg-5">
 
-        @Html.TextBoxFor(Model => Model.Room.RoomType.Type, new { @class = "form-control", @disabled = "disabled" })
+                @Html.TextBoxFor(Model => Model.Room.RoomType.Type, new { @class = "form-control", @disabled = "disabled" })
 
-    </div>
+            </div>
 
-    <div class="col-lg-5">
+            <div class="col-lg-5">
 
-        @Html.TextBoxFor(Model => Model.Room.Number, new { @class = "form-control", @disabled = "disabled" })
+                @Html.TextBoxFor(Model => Model.Room.Number, new { @class = "form-control", @disabled = "disabled" })
 
-    </div>
-</div>
-                 @Html.HiddenFor(Model => Model.Room.RoomType.Price, new { @class = "form-control", @id = "pricePerDay" })
+            </div>
+        </div>
+        @Html.HiddenFor(Model => Model.Room.RoomType.Price, new { @class = "form-control", @id = "pricePerDay" })
 
-<div>
-    <label>Price</label>
-    @Html.TextBoxFor(Model => Model.Price, new { @class = "form-control", @id = "Price", @disabled = "disabled" })
+        <div>
+            <label>Price</label>
+            @Html.TextBoxFor(Model => Model.Price, new { @class = "form-control", @id = "Price", @disabled = "disabled" })
 
-</div>
+        </div>
     }
-<br />
-<div class="row form-group">
-
-    <div class="col-lg-5">
-
-        @Html.TextBoxFor(Model => Model.StartDate, new { @id = "TextBox1", @class = "form-control", placeholder = "Select Start Date", autocomplete = "off" })
-
-
-    </div>
-
-    <div class="col-lg-5">
-
-        @Html.TextBoxFor(Model => Model.EndDate, new { @id = "TextBox2", @class = "form-control", placeholder = "Select End Date", autocomplete = "off" })
-
-    </div>
-    <div class=" col-lg-2">
-        @Html.TextBoxFor(Model => Model.Duration, new { @id = "TextBox3"}) days
-
-
-    </div>
-
-</div>
-         if (ViewBag.EditMode == true)
-         {
-<input type="submit" name="name" value="Edit" class="btn btn-danger btnCentered" />
-<br />
-<a href="/Reservations/Create" class="text-danger">Return To Create Form</a>
-
-         }
-         else
-         {
-<input type="submit" name="name" value="Reserve" class="btn btn-danger btnCentered" />
-         }
-<div>
     <br />
+    <div class="row form-group">
 
-    @{Html.RenderAction("_List", "Reservations");}
-</div>
-         }
+        <div class="col-lg-5">
+
+            @Html.TextBoxFor(Model => Model.StartDate, new { @id = "TextBox1", @class = "form-control", placeholder = "Select Start Date", autocomplete = "off" })
+            @Html.ValidationMessageFor(Model => Model.StartDate, "", new { @class = "Error" })
+
+
+
+        </div>
+
+        <div class="col-lg-5">
+
+            @Html.TextBoxFor(Model => Model.EndDate, new { @id = "TextBox2", @class = "form-control", placeholder = "Select End Date", autocomplete = "off" })
+            @Html.ValidationMessageFor(Model => Model.EndDate, "", new { @class = "Error" })
+            
+
+        </div>
+        <div class=" col-lg-2">
+            @Html.TextBoxFor(Model => Model.Duration, new { @id = "TextBox3"}) days
+            @Html.ValidationMessageFor(Model => Model.Duration, "", new { @class = "Error" })
+
+
+        </div>
+
+    </div>
+    if (ViewBag.EditMode == true)
+    {
+        <input type="submit" name="name" value="Edit" class="btn btn-danger btnCentered" />
+        <br />
+        <a href="/Reservations/Create" class="text-danger">Return To Create Form</a>
+
+    }
+    else
+    {
+        <input type="submit" name="name" value="Reserve" class="btn btn-danger btnCentered" />
+    }
+    <div>
+        <br />
+
+        @{Html.RenderAction("_List", "Reservations");}
+    </div>
+}
 
 <script src="~/Scripts/jquery-3.3.1.js"></script>
 <script src="~/Scripts/jquery-ui-1.12.1.js"></script>
+
+<script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
 <script>
 
     $(document).ready(function () {
@@ -137,12 +152,12 @@
 
 
         $("#TextBox1").datepicker({
-            minDate: 0,
+            minDate: "not",
 
             onSelect: function (dateStr) {
                 var min = $(this).datepicker('getDate');
                 $("#TextBox2").datepicker('option', 'minDate', min || '0');
-               
+
             }
         });
 

@@ -17,20 +17,23 @@ namespace TIT_Task.Models
     {
         public int Id { get; set; }
 
+        [Required]
         [DataType(DataType.Date)]
         [DisplayFormat( DataFormatString = "{0:d}", ApplyFormatInEditMode = true)]
-        public Nullable<System.DateTime> StartDate { get; set; }
+        
+        public DateTime StartDate { get; set; }
 
+        [Required]
         [DataType(DataType.Date)]
         [DisplayFormat( DataFormatString = "{0:d}", ApplyFormatInEditMode = true)]
-        public Nullable<System.DateTime> EndDate { get; set; }
+        public DateTime EndDate { get; set; }
 
-
-        public Nullable<int> Duration { get; set; }
+        [Range(minimum:2,maximum:100)]
+        public int Duration { get; set; }
         public Nullable<int> Price { get; set; }
         
         
-        public Nullable<int> RoomId { get; set; }
+        public int RoomId { get; set; }
     
         public virtual Room Room { get; set; }
     }
